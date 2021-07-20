@@ -4,6 +4,6 @@ module.exports = {
     channelName: "mychannel",
     chaincodeName: "basic",
     mspOrg1: "Org1MSP",
-    org1UserId: "appUser05",
+    org1UserId: "appUser07",
   },
 };
