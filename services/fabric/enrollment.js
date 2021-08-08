@@ -1,6 +1,7 @@
 "use strict";
 const { buildCCPOrg1, buildWallet } = require("./AppUtil");
 const { buildCAClient, registerAndEnrollUser } = require("./CAUtil.js");
+const networkObject = require("../../services/fabric/chaincode");
 const FabricCAServices = require("fabric-ca-client");
 const { Wallets } = require("fabric-network");
 const path = require("path");
@@ -20,6 +21,7 @@ const ccp = buildCCPOrg1();
  * @returns {Promise<{Keys}>}
  */
 async function enrollAdmin() {
+  let {contract} = await networkObject.connectToNetwork(config.fabric.org1UserId);
   try {
     // Create a new CA client for interacting with the CA.
     const caClient = buildCAClient(
@@ -66,6 +68,9 @@ async function enrollAdmin() {
         config.fabric.org1UserId,
         "org1.department1"
       );
+
+      await contract.submitTransaction("InitLedger");
+
     } catch (error) {
       console.error(`Failed to enroll admin user : ${error}`);
     }
