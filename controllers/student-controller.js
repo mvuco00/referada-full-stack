@@ -2,13 +2,10 @@ const networkObject = require("../services/fabric/chaincode");
 const config = require("../loaders/config");
 
 const addStudent = async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
   try {
-    let {contract} = await networkObject.connectToNetwork(config.fabric.org1UserId);
+    let { contract } = await networkObject.connectToNetwork(
+      config.fabric.org1UserId
+    );
     const data = req.body;
     await contract.submitTransaction(
       "CreateAsset",
@@ -25,13 +22,10 @@ const addStudent = async (req, res) => {
 };
 
 const getAllData = async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
   try {
-    let {contract} = await networkObject.connectToNetwork(config.fabric.org1UserId);
+    let { contract } = await networkObject.connectToNetwork(
+      config.fabric.org1UserId
+    );
 
     let result = await contract.evaluateTransaction("GetAllAssets");
     console.log(`*** Result: ${result}`);
@@ -43,13 +37,10 @@ const getAllData = async (req, res) => {
 };
 
 const readData = async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
   try {
-    let {contract} = await networkObject.connectToNetwork(config.fabric.org1UserId);
+    let { contract } = await networkObject.connectToNetwork(
+      config.fabric.org1UserId
+    );
     let result = await contract.evaluateTransaction(
       "ReadAsset",
       req.params.studentId
@@ -61,43 +52,49 @@ const readData = async (req, res) => {
   }
 };
 
-
-const updateAsset = async (req,res)=>{
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
+const updateAsset = async (req, res) => {
   const data = req.params;
-  
+  console.log(data);
   try {
-    let {contract} = await networkObject.connectToNetwork(config.fabric.org1UserId);
-    await contract.submitTransaction('UpdateAsset', data.studentId, data.name, data.collage, data.grade)
-    res.status(200).send('success');
+    let { contract } = await networkObject.connectToNetwork(
+      config.fabric.org1UserId
+    );
+    await contract.submitTransaction(
+      "UpdateAsset",
+      data.studentId,
+      data.name,
+      data.collage,
+      data.grade
+    );
+    res.status(200).send("success");
   } catch (e) {
     console.log(e);
     return e;
   }
-}
+};
 
-const transferAsset =async (req,res)=>{
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
+const transferAsset = async (req, res) => {
+  console.log(req.params);
   try {
-    let {contract} = await networkObject.connectToNetwork(config.fabric.org1UserId);
+    let { contract } = await networkObject.connectToNetwork(
+      config.fabric.org1UserId
+    );
     let result = await contract.submitTransaction(
       "TransferAsset",
       req.params.studentId.toString(),
-      req.params.collage.toString(),
+      req.params.collage.toString()
     );
     res.status(200).send(result);
   } catch (e) {
     console.log(e);
     return e;
   }
-}
+};
 
-module.exports = { addStudent, getAllData, readData,updateAsset,transferAsset };
+module.exports = {
+  addStudent,
+  getAllData,
+  readData,
+  updateAsset,
+  transferAsset,
+};
