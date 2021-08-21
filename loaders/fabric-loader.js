@@ -58,6 +58,10 @@ async function main() {
       let result = await contract.evaluateTransaction("GetAllAssets");
       console.log(`*** Result: ${prettyJSONString(result.toString())}`);
 
+
+      result = await contract.evaluateTransaction('GetAssetHistory', '0001');
+			console.log(`*** Result: ${prettyJSONString(result.toString())}`);
+
     
   } catch (error) {
     console.error(`******** FAILED to run the application: ${error}`);

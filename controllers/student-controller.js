@@ -16,7 +16,7 @@ const addStudent = async (req, res) => {
     );
     res.status(200).send("Successfull");
   } catch (e) {
-    console.log(e);
+    res.status(500).send("Internal Server Error");
     return e;
   }
 };
@@ -31,7 +31,7 @@ const getAllData = async (req, res) => {
     console.log(`*** Result: ${result}`);
     res.status(200).send(result);
   } catch (e) {
-    console.log(e);
+    res.status(500).send("Internal Server Error");
     return e;
   }
 };
@@ -47,14 +47,13 @@ const readData = async (req, res) => {
     );
     res.status(200).send(result);
   } catch (e) {
-    console.log(e);
+    res.status(500).send("Internal Server Error");
     return e;
   }
 };
 
 const updateAsset = async (req, res) => {
   const data = req.params;
-  console.log(data);
   try {
     let { contract } = await networkObject.connectToNetwork(
       config.fabric.org1UserId
@@ -68,13 +67,12 @@ const updateAsset = async (req, res) => {
     );
     res.status(200).send("success");
   } catch (e) {
-    console.log(e);
+    res.status(500).send("Internal Server Error");
     return e;
   }
 };
 
 const transferAsset = async (req, res) => {
-  console.log(req.params);
   try {
     let { contract } = await networkObject.connectToNetwork(
       config.fabric.org1UserId
@@ -86,7 +84,40 @@ const transferAsset = async (req, res) => {
     );
     res.status(200).send(result);
   } catch (e) {
-    console.log(e);
+    res.status(500).send("Internal Server Error");
+    return e;
+  }
+};
+
+const assetHistory = async (req, res) => {
+  try {
+    let { contract } = await networkObject.connectToNetwork(
+      config.fabric.org1UserId
+    );
+    let result = await contract.evaluateTransaction(
+      "GetAssetHistory",
+      req.params.studentId.toString()
+    );
+    console.log(result);
+    res.status(200).send(result);
+  } catch (e) {
+    res.status(500).send("Internal Server Error");
+    return e;
+  }
+};
+
+const deleteAsset = async (req, res) => {
+  try {
+    let { contract } = await networkObject.connectToNetwork(
+      config.fabric.org1UserId
+    );
+    let result = await contract.submitTransaction(
+      "DeleteAsset",
+      req.params.studentId.toString()
+    );
+    res.status(200).send(result);
+  } catch (e) {
+    res.status(500).send("Internal Server Error");
     return e;
   }
 };
@@ -97,4 +128,6 @@ module.exports = {
   readData,
   updateAsset,
   transferAsset,
+  assetHistory,
+  deleteAsset
 };
