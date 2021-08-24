@@ -9,27 +9,28 @@ const {
   updateAsset,
   transferAsset,
   assetHistory,
-  deleteAsset
+  deleteAsset,
+  queryByCollage,
 } = require("./controllers/student-controller");
 
 require("./loaders/fabric");
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
 app.get("/student/allData", getAllData);
+app.put("/student/queryByCollage/:collage", queryByCollage);
 
 app.post("/student/readAsset/:studentId", readData);
 
 app.post("/student/addAsset", addStudent);
-app.post("/student/updateAsset/:studentId/:name/:collage/:grade", updateAsset);
-app.put("/student/updateAsset/:studentId/:collage", transferAsset);
+app.post(
+  "/student/updateAsset/:studentId/:name/:collage/:grade/:level",
+  updateAsset
+);
+app.put("/student/transferAsset/:studentId/:collage", transferAsset);
 app.put("/student/assetHistory/:studentId", assetHistory);
 app.delete("/student/deleteAsset/:studentId", deleteAsset);
 
 app.listen(PORT, () => {
-  console.log(`Example app listening at http://localhost:${PORT}`);
+  console.log(`App listening at http://localhost:${PORT}`);
 });

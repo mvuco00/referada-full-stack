@@ -12,7 +12,8 @@ const addStudent = async (req, res) => {
       data.Id,
       data.Name,
       data.Collage,
-      data.Grade
+      data.Grade,
+      data.Level
     );
     res.status(200).send("Successfull");
   } catch (e) {
@@ -48,7 +49,6 @@ const readData = async (req, res) => {
     res.status(200).send(result);
   } catch (e) {
     res.status(500).send("Internal Server Error");
-    return e;
   }
 };
 
@@ -63,12 +63,12 @@ const updateAsset = async (req, res) => {
       data.studentId,
       data.name,
       data.collage,
-      data.grade
+      data.grade,
+      data.level
     );
     res.status(200).send("success");
   } catch (e) {
     res.status(500).send("Internal Server Error");
-    return e;
   }
 };
 
@@ -85,7 +85,6 @@ const transferAsset = async (req, res) => {
     res.status(200).send(result);
   } catch (e) {
     res.status(500).send("Internal Server Error");
-    return e;
   }
 };
 
@@ -102,7 +101,6 @@ const assetHistory = async (req, res) => {
     res.status(200).send(result);
   } catch (e) {
     res.status(500).send("Internal Server Error");
-    return e;
   }
 };
 
@@ -118,16 +116,32 @@ const deleteAsset = async (req, res) => {
     res.status(200).send(result);
   } catch (e) {
     res.status(500).send("Internal Server Error");
-    return e;
+  }
+};
+
+const queryByCollage = async (req, res) => {
+  console.log(req.params.collage.toString());
+  try {
+    let { contract } = await networkObject.connectToNetwork(
+      config.fabric.org1UserId
+    );
+    result = await contract.evaluateTransaction(
+      "QueryAssetsByCollage",
+      req.params.collage.toString()
+    );
+    res.status(200).send(result);
+  } catch (e) {
+    res.status(500).send("Internal Server Error");
   }
 };
 
 module.exports = {
   addStudent,
+  queryByCollage,
   getAllData,
   readData,
   updateAsset,
   transferAsset,
   assetHistory,
-  deleteAsset
+  deleteAsset,
 };

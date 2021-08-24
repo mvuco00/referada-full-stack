@@ -7,11 +7,7 @@ const path = require("path");
 const config = require("../../loaders/config");
 const walletPath = path.join(__dirname, "wallet");
 
-/**
- * Do all initialization needed to invoke chaincode
- * @param userId
- * @returns {Promise<{contract: Contract, gateway: Gateway, network: Network} | Error>} Network objects needed to interact with chaincode
- */
+
 async function connectToNetwork() {
   const ccp = buildCCPOrg1();
   const wallet = await buildWallet(Wallets, walletPath);
@@ -32,7 +28,7 @@ async function connectToNetwork() {
   await gateway.connect(ccp, {
     wallet,
     identity: config.fabric.org1UserId,
-    discovery: { enabled: true, asLocalhost: true }, // using asLocalhost as this gateway is using a fabric network deployed locally
+    discovery: { enabled: true, asLocalhost: true }, 
   });
   const network = await gateway.getNetwork(config.fabric.channelName);
   const contract = network.getContract(config.fabric.chaincodeName);

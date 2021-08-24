@@ -6,14 +6,12 @@ const { Wallets } = require("fabric-network");
 const path = require("path");
 const config = require("../../loaders/config");
 const fs = require("fs");
-
+const networkObject = require("./chaincode");
 const walletPath = path.join(__dirname, "wallet");
 const adminUserId = "admin";
 const adminUserPasswd = "adminpw";
 
-
 const ccp = buildCCPOrg1();
-
 
 async function enrollAdmin() {
   try {
@@ -23,6 +21,7 @@ async function enrollAdmin() {
       "ca.org1.example.com"
     );
     const wallet = await buildWallet(Wallets, walletPath);
+    console.log(adminUserId);
 
     try {
       const identity = await wallet.get(adminUserId);
@@ -57,14 +56,25 @@ async function enrollAdmin() {
         config.fabric.org1UserId,
         "org1.department1"
       );
-     
+      await initLedger();
     } catch (error) {
       console.error(`Failed to enroll admin user : ${error}`);
     }
   } catch (error) {
-    logger.error(`Failed to enroll admin user "admin": ${error}`);
+    console.log(`Failed to enroll admin user "admin": ${error}`);
     process.exit(1);
   }
 }
 
-module.exports = { enrollAdmin };
+async function initLedger() {
+  try {
+    let { contract } = await networkObject.connectToNetwork(
+      config.fabric.org1UserId
+    );
+    await contract.submitTransaction("InitLedger");
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+module.exports = { enrollAdmin, initLedger };

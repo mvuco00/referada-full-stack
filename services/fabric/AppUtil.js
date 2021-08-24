@@ -1,16 +1,9 @@
-/*
- * Copyright IBM Corp. All Rights Reserved.
- *
- * SPDX-License-Identifier: Apache-2.0
- */
-
 "use strict";
 
 const fs = require("fs");
 const path = require("path");
 
 exports.buildCCPOrg1 = () => {
-  // load the common connection configuration file
   const ccpPath = path.resolve(
     __dirname,
     "..",
@@ -28,8 +21,6 @@ exports.buildCCPOrg1 = () => {
     throw new Error(`no such file or directory: ${ccpPath}`);
   }
   const contents = fs.readFileSync(ccpPath, "utf8");
-
-  // build a JSON object from the file contents
   const ccp = JSON.parse(contents);
 
   console.log(`Loaded the network configuration located at ${ccpPath}`);
@@ -37,7 +28,6 @@ exports.buildCCPOrg1 = () => {
 };
 
 exports.buildCCPOrg2 = () => {
-  // load the common connection configuration file
   const ccpPath = path.resolve(
     __dirname,
     "..",
@@ -55,16 +45,11 @@ exports.buildCCPOrg2 = () => {
     throw new Error(`no such file or directory: ${ccpPath}`);
   }
   const contents = fs.readFileSync(ccpPath, "utf8");
-
-  // build a JSON object from the file contents
   const ccp = JSON.parse(contents);
-
-  console.log(`Loaded the network configuration located at ${ccpPath}`);
   return ccp;
 };
 
 exports.buildWallet = async (Wallets, walletPath) => {
-  // Create a new  wallet : Note that wallet is for managing identities.
   let wallet;
   if (walletPath) {
     wallet = await Wallets.newFileSystemWallet(walletPath);
